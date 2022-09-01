@@ -12,25 +12,16 @@
 
 #define USE_EXTERNAL_SD_FOR_CONFIG
 // comment out USE_EXTERNAL_SD_FOR_CONFIG if you write config directly, and define config you use
-// #define USE_AMBIENT  // comment out if you don't use Ambient for logging
+// #define USE_AMBIENT  // comment out if you don't use Ambient for loggingz
 // #define USE_PUSHBULLET  // comment out if you don't use PushBullet for notifying
 
 File f;
 // WiFi setting
-#define WIFI_SSID "Your WIFI_SSID"
-#define WIFI_PASSWORD "Your WIFI_password"
-const char *host = "Your google spreadsheet url";
+#define WIFI_SSID "******" // your WIFI SSID
+#define WIFI_PASSWORD "****" // your WIFI Password
+const char *host = "https://script.google.com/macros/s/********************************/exec"; // your spreadsheet addres
 bool fOK = true;
-#if defined(USE_AMBIENT) || defined(USE_PUSHBULLET)
-bool use_wifi = true;
-const char *ssid{"Write your ssid"};          // write your WiFi SSID (2.4GHz)
-const char *password{"Write your password"};  // write your WiFi password
-#else
-bool use_wifi = false;
-const char *ssid;      // dummy
-const char *password;  // dummy
-#endif
-
+const char *id = "1"; // M5Stack ID
 // Ambient setting
 WiFiClient client;
 Ambient ambient;
@@ -41,7 +32,17 @@ const char *writeKey{"Write your Ambient write key"};  // write your Ambient wri
 #else
 bool use_ambient = false;
 unsigned int channelId;  // dummy
-const char *writeKey;    // dummy
+const char *writeKey;    // dummy";
+#if defined(USE_AMBIENT) || defined(USE_PUSHBULLET)
+bool use_wifi = true;
+const char *ssid{"Write your ssid"};          // write your WiFi SSID (2.4GHz)
+const char *password{"Write your password"};  // write your WiFi password
+#else
+bool use_wifi = false;
+const char *ssid;      // dummy
+const char *password;  // dummy
+#endif
+
 #endif
 
 // Pushbullet setting
@@ -113,6 +114,7 @@ void send_co2(float co2,float temp,float humidity){
     json_reqest["co2"] = co2;
     json_reqest["temp"] = temp;
     json_reqest["humidity"] = humidity;
+    json_reqest["id"] = id;
     serializeJson(json_reqest,buffer,sizeof(buffer));
     HTTPClient http;
     http.begin(host);
